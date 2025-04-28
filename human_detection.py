@@ -1,23 +1,33 @@
 from ultralytics import YOLO
+from CameraFeed import CameraFeed
+import numpy as np
 
 model = YOLO('yolov8n.pt')
 
-# seq_001930: appears to be one scene
-# can start by masking to the right path way
-# Create camera object to step through scene in forward pass
-# test
+EXPECTED_IMAGE_SIZE = (480, 640, 3)
 
-# Run inference on the image
-results = model('OptiLine/data/frames/seq_000062.jpg')  # Results object
+# Mask out everythin except right-most pathway
+mask = np.zeros(EXPECTED_IMAGE_SIZE)
+mask[:, EXPECTED_IMAGE_SIZE[1] * 3 // 5 : , :] = 1
 
-# Save the annotated image
-path = 'OptiLine/outputs/labeled_ims/output.jpg'  # Or whatever path you want
+feed = CameraFeed(r'OptiLine/data/frames', skip_to= 1929, mask=mask)
 
-# results[0] corresponds to the first (and only) image
-annotated_frame = results[0].plot()  # This draws boxes and labels
+i = 0
+while True:
+    try:
+        # Run inference on the image
+        results = model(next(feed))  # Results object
+    except StopIteration:
+        break
 
-# Save it using OpenCV
-import cv2
-cv2.imwrite(path, annotated_frame)
+    # Save the annotated image
+    path = f'OptiLine/outputs/labeled_ims/output_{i}.jpg'  
 
-print(f"Saved annotated image to {path}")
+    # results[0] corresponds to the first (and only) image
+    annotated_frame = results[0].plot()  # This draws boxes and labels
+
+    # Save it using OpenCV
+    import cv2
+    cv2.imwrite(path, annotated_frame)
+
+    i += 1
