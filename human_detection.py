@@ -5,7 +5,7 @@ model = YOLO('yolov8n.pt')
 # seq_001930: appears to be one scene
 # can start by masking to the right path way
 # Create camera object to step through scene in forward pass
-
+# test
 
 # Run inference on the image
 results = model('OptiLine/data/frames/seq_000062.jpg')  # Results object
