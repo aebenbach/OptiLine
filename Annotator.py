@@ -9,18 +9,30 @@ def label_vec(n): # assumes k <= 26
 
     k = (n // 26 ) + 1
 
-    ary = np.arange(n*k).reshape((k,n))
+    a = np.arange(26)
 
-    labs = vchr((ary % 26) + 65) 
+    labs = vchr((a % 26) + 65) 
 
     if (k > 1) and (k <= 26):
         kry = np.arange(k)
         labs2 = vchr((kry % 26) + 65)
 
-        labs = np.char.add(labs2, labs)
+        labs = np.char.add(labs2[:,None], labs[None,:])
+
+
+
+    # ary = np.arange(n*k).reshape((k,n))
+
+    # labs = vchr((ary % 26) + 65) 
+
+    # if (k > 1) and (k <= 26):
+    #     kry = np.arange(k)
+    #     labs2 = vchr((kry % 26) + 65)
+
+    #     labs = np.char.add(labs2, labs)
     
-    elif k > 26:
-        raise Exception
+    # elif k > 26:
+    #     raise Exception
     
     
     return labs.flatten()
@@ -58,7 +70,7 @@ class Annotator:
             cv2.rectangle(annotated_frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
             # Draw the label
-            print(labs, label)
+            # print(labs, label)
             cv2.putText(annotated_frame, label, (x1, y1 - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
 

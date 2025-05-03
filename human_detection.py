@@ -7,7 +7,11 @@ EXPECTED_IMAGE_SIZE = (480, 640, 3)
 mask = np.zeros(EXPECTED_IMAGE_SIZE)
 mask[:, EXPECTED_IMAGE_SIZE[1] * 3 // 5 : , :] = 1
 
-feed = CameraFeed(r'OptiLine/data/frames', skip_to= 1929, mask=mask)
+skip_to = 1929
+# skip_to = 0
+# mask = None
+
+feed = CameraFeed(r'OptiLine/data/frames', skip_to= skip_to, mask=mask)
 annotator = Annotator()
 
 i = 0
