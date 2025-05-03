@@ -56,7 +56,8 @@ class ImageIterator:
 class CameraFeed:
     def __init__(self, frames_path, 
                  mask = None,  # Implies an expected image shape
-                 skip_to = 0):
+                 skip_to = 0,
+                 expected = None,):
         
         self.mask = mask 
 
@@ -68,10 +69,13 @@ class CameraFeed:
     def __next__(self):
         im = next(self.feed)
 
+
         if type(self.mask) != type(None):
             im = im * self.mask
-
+            # print('1',im.shape)
             im = squish_matrix(im)
+            # print('2',im.shape)
+
         return im
     
 

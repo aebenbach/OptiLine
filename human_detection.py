@@ -3,15 +3,21 @@ from Annotator import Annotator
 import numpy as np
 
 EXPECTED_IMAGE_SIZE = (480, 640, 3)
-# Mask out everythin except right-most pathway
+
+# Want to keep foreground on right pathway
 mask = np.zeros(EXPECTED_IMAGE_SIZE)
-mask[:, EXPECTED_IMAGE_SIZE[1] * 3 // 5 : , :] = 1
+mask[EXPECTED_IMAGE_SIZE[0] * 2 // 5 :  , # Keep bottom 2/5
+     EXPECTED_IMAGE_SIZE[1] * 3 // 5 : , :] = 1 # Keep right 2/5
 
 skip_to = 1929
-# skip_to = 0
+skip_to = 1700
 # mask = None
 
-feed = CameraFeed(r'OptiLine/data/frames', skip_to= skip_to, mask=mask)
+feed = CameraFeed(r'OptiLine/data/frames', 
+                  skip_to= skip_to, 
+                  mask=mask, 
+                  expected = EXPECTED_IMAGE_SIZE, )
+
 annotator = Annotator()
 
 i = 0
